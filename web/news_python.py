@@ -1,5 +1,9 @@
+from datetime import datetime
+
 import requests
 from bs4 import BeautifulSoup
+
+from  web.model import db, News
 
 
 def get_html(url):
@@ -15,23 +19,26 @@ def get_html(url):
 def get_python_news():
     html = get_html('https://www.python.org/blogs/')
 
-    try:
+    if html:
         soup = BeautifulSoup(html, 'html.parser')
         html_news = soup.find('ul', class_='list-recent-posts').findAll('li')
-
-        result_news = []
 
         for news in html_news:
             title = news.find('a').text
             url = news.find('a')['href']
             published = news.find('time').text
 
-            result_news.append({
-                'title': title,
-                'url': url,
-                'published': published,
-            })
-        return result_news
+            try:
+                published = datetime.strptime(published, '%Y-%m-%d')
+            except ValueError:
+                published = datetime.now()
 
-    except(TypeError, AttributeError):
-        return False
+            save_news(title, url, published)
+
+
+def save_news(title, url, published):
+    news_exist = News.query.filter(News.url == url).count()
+    if not news_exist:
+        new_news = News(title=title, url=url, published=published)
+        db.session.add(new_news)
+        db.session.commit()
