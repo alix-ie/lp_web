@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 
+from web.forms import LoginForm
 from web.weather import weather_by_city
 from web.model import db, News
 
@@ -11,9 +12,15 @@ def create_app():
 
     @app.route("/")
     def index():
-        page_title = 'News Python'
+        title = 'News Python'
         weather_report = weather_by_city(app.config['WEATHER_DEFAULT_CITY'])
         news = News.query.order_by(News.published.desc()).all()
-        return render_template('index.html', page_title=page_title, weather=weather_report, news_list=news)
+        return render_template('index.html', page_title=title, weather=weather_report, news_list=news)
+
+    @app.route('/login')
+    def login():
+        title = 'Authorization'
+        login_form = LoginForm()
+        return render_template('login.html', page_title=title, form=login_form)
 
     return app
