@@ -1,20 +1,15 @@
 from functools import wraps
 
-from flask import current_app, flash, request, redirect, url_for
-from flask_login import config, current_user
+from flask import flash, redirect, url_for
+from flask_login import current_user, login_required
 
 
 def admin_required(func):
     @wraps(func)
     def decorated_view(*args, **kwargs):
-        if request.method in config.EXEMPT_METHODS:
-            return func(*args, **kwargs)
-        elif current_app.config.get('LOGIN_DISABLED'):
-            return func(*args, **kwargs)
-        elif not current_user.is_authenticated:
-            return current_app.login_manager.unauthorized()
-        elif not current_user.is_admin:
+        if not current_user.is_admin:
             flash("Sorry, you're not admin.")
             return redirect(url_for('news.index'))
         return func(*args, **kwargs)
-    return decorated_view
+
+    return login_required(decorated_view)
