@@ -13,7 +13,7 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('news.index'))
 
-    title = 'Authorization'
+    title = 'Log in'
     login_form = LoginForm()
     return render_template('user/login.html', page_title=title, form=login_form)
 
@@ -44,7 +44,7 @@ def registration():
     if current_user.is_authenticated:
         return redirect(url_for('news.index'))
 
-    title = 'Registration'
+    title = 'Sign up'
     registration_form = RegistrationForm()
     return render_template('user/registration.html', page_title=title, form=registration_form)
 
