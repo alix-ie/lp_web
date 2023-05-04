@@ -1,6 +1,7 @@
 from web import create_app
-from web.news_python import get_python_news
+from web.news.parsers import sitepoint
 
 app = create_app()
 with app.app_context():
-    get_python_news()
+    sitepoint.get_news_snippets()
+    sitepoint.get_news_content()
