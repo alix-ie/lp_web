@@ -3,6 +3,7 @@
 {% block content %}
     <div class="row">
         <div class="col-8 news-content">
+            {% include 'messages.html' %}
             {{ news.text|safe }}
         </div>
     </div>
