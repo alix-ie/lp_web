@@ -43,7 +43,7 @@ def logout():
 @blueprint.route('/registration')
 def registration():
     if current_user.is_authenticated:
-        return redirect(url_for('news.index'))
+        return redirect(get_redirect_target())
 
     title = 'Sign up'
     registration_form = RegistrationForm()
@@ -61,10 +61,10 @@ def process_registration():
         db.session.commit()
 
         flash('Your registration was successful!')
-        return redirect(url_for('news.index'))
+        return redirect(get_redirect_target())
 
     for field, errors in form.errors.items():
         for error in errors:
             flash(f'{getattr(form, field).label.text}: {error}')
 
-    return redirect(url_for('user.registration'))
+    return redirect(url_for('user.registration', next=get_redirect_target()))

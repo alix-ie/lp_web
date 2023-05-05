@@ -13,7 +13,7 @@ def is_safe_url(target):
 def get_redirect_target():
     default_referrer = url_for('news.index')
 
-    for target in (request.values.get('next'), request.referrer, default_referrer):
+    for target in (request.values.get('next'), default_referrer):
 
         if not target:
             continue
