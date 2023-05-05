@@ -4,6 +4,7 @@ from flask_login import login_user, logout_user, current_user
 from web.db import db
 from web.user.forms import LoginForm, RegistrationForm
 from web.user.models import User
+from web.utils import get_redirect_target
 
 blueprint = Blueprint('user', __name__, url_prefix='/users')
 
@@ -11,7 +12,7 @@ blueprint = Blueprint('user', __name__, url_prefix='/users')
 @blueprint.route('/login')
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('news.index'))
+        return redirect(get_redirect_target())
 
     title = 'Log in'
     login_form = LoginForm()
@@ -26,17 +27,17 @@ def process_login():
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             flash('Logged in.')
-            return redirect(url_for('news.index'))
+            return redirect(get_redirect_target())
 
     flash('The username or password that you have entered is invalid.')
-    return redirect(url_for('user.login'))
+    return redirect(url_for('user.login', next=get_redirect_target()))
 
 
 @blueprint.route('/logout')
 def logout():
     logout_user()
     flash('Logged out.')
-    return redirect(url_for('news.index'))
+    return redirect(get_redirect_target())
 
 
 @blueprint.route('/registration')
