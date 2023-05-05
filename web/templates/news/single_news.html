@@ -5,20 +5,34 @@
         <div class="col-8 news-content">
             {% include 'messages.html' %}
             {{ news.text|safe }}
+            {% if news.comments %}
+                <h3>Comments:</h3>
+                    {% for comment in news.comments %}
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="card-text">{{ comment.text }}</p>
+                                <p class="card-text">
+                                    <small>Posted: {{ comment.created.strftime('%d.%m.%Y') }} |
+                                           Author: {{ comment.user.username }}</small>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+            {% endif %}
+            {% if current_user.is_authenticated %}
+                <form action="{{ url_for('news.add_comment') }}" method="POST">
+                    {{ add_comment_form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ add_comment_form.comment_text.label }}
+                        {{ add_comment_form.comment_text() }}
+                    </div>
+                    {{ add_comment_form.submit() }}
+                </form>
+            {% else %}
+                <div>
+                    <p><a href="{{ url_for('user.login') }}">Log in</a> to leave a comment.</p>
+                </div>
+            {% endif %}
         </div>
     </div>
-    {% if news.comments %}
-        <h3>Comments:</h3>
-            {% for comment in news.comments %}
-                <div class="card">
-                    <div class="card-body">
-                        <p class="card-text">{{ comment.text }}</p>
-                        <p class="card-text">
-                            <small>Posted: {{ comment.created.strftime('%d.%m.%Y') }} |
-                                   Author: {{ comment.user.username }}</small>
-                        </p>
-                    </div>
-                </div>
-    {% endfor %}
-{% endif %}
 {% endblock %}

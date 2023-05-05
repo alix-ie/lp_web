@@ -1,7 +1,10 @@
-from flask import abort, Blueprint, current_app, render_template
+from flask import abort, Blueprint, current_app, flash, redirect, render_template, request
+from flask_login import current_user, login_required
 
+from web.db import db
+from web.news.forms import AddCommentForm
+from web.news.models import Comment, News
 from web.weather import weather_by_city
-from web.news.models import News
 
 blueprint = Blueprint('news', __name__)
 
@@ -17,8 +20,32 @@ def index():
 @blueprint.route('/news/<int:news_id>')
 def single_news(news_id):
     news = News.query.filter(News.id == news_id).first()
+    add_comment_form = AddCommentForm(news_id=news.id)
 
     if not news:
         abort(404)
 
-    return render_template('news/single_news.html', page_title=news.title, news=news)
+    return render_template('news/single_news.html', page_title=news.title, news=news, add_comment_form=add_comment_form)
+
+
+@blueprint.route('/news/add-comment', methods=['POST'])
+@login_required
+def add_comment():
+    form = AddCommentForm()
+
+    if form.validate_on_submit():
+        new_comment = Comment(
+            text=form.comment_text.data,
+            news_id=form.news_id.data,
+            user_id=current_user.id
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        flash('Comment was added successfully.')
+
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'{getattr(form, field).label.text}: {error}')
+
+    return redirect(request.referrer)
