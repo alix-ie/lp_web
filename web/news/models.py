@@ -14,6 +14,9 @@ class News(db.Model):
 
     comments = relationship('Comment', back_populates='news')
 
+    def comments_count(self):
+        return len(self.comments)
+
     def __repr__(self):
         return '<News {} {}>'.format(self.title, self.url)
 
