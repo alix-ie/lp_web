@@ -5,7 +5,7 @@ from web.db import db
 from web.news.forms import AddCommentForm
 from web.news.models import Comment, News
 from web.utils import flash_form_errors, get_redirect_target
-from web.weather import weather_by_city
+from web.weather import get_weather
 
 blueprint = Blueprint('news', __name__)
 
@@ -13,13 +13,13 @@ blueprint = Blueprint('news', __name__)
 @blueprint.route("/")
 def index():
     title = 'News Python'
-    weather_report = weather_by_city(current_app.config['WEATHER_DEFAULT_CITY'])
+    weather = get_weather(current_app.config['WEATHER_DEFAULT_CITY'])
     news = News.query.filter(News.text.isnot(None)).order_by(News.published.desc()).limit(10).all()
 
     return render_template(
         'news/index.html',
         page_title=title,
-        weather=weather_report,
+        weather=weather,
         news_list=news
     )
 

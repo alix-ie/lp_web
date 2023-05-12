@@ -18,11 +18,7 @@
         </div>
         <div class="col-4">
             <h2>Weather now</h2>
-            {% if weather %}
-                {{ weather.temp_C }}&#8451, feels like {{ weather.FeelsLikeC }}&#8451
-            {% else %}
-                The weather report is not available now
-            {% endif %}
+            <p>{{ weather }}</p>
         </div>
     </div>
 {% endblock %}
