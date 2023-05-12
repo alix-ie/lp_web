@@ -14,6 +14,7 @@ class News(db.Model):
 
     comments = relationship('Comment', back_populates='news')
 
+    @property
     def comments_count(self):
         return len(self.comments)
 

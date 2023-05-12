@@ -8,7 +8,7 @@ from web.news.models import News
 from web.news.parsers.utils import get_html, save_news
 
 
-def get_news_snippets():
+def load_news_snippets():
     html = get_html(config.SITEPOINT_URL + '/python/')
 
     if not html:
@@ -33,7 +33,7 @@ def get_news_snippets():
             save_news(title, url, published)
 
 
-def get_news_content():
+def load_news_content():
     news_without_text = News.query.filter(News.text.is_(None))
 
     for news in news_without_text:

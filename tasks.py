@@ -9,18 +9,18 @@ celery_app = Celery('tasks', broker='redis://localhost:6379/0')
 
 
 @celery_app.task
-def sitepoint_snippets():
+def load_sitepoint_snippets():
     with flask_app.app_context():
-        sitepoint.get_news_snippets()
+        sitepoint.load_news_snippets()
 
 
 @celery_app.task
-def sitepoint_content():
+def load_sitepoint_content():
     with flask_app.app_context():
-        sitepoint.get_news_content()
+        sitepoint.load_news_content()
 
 
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    sender.add_periodic_task(crontab(minute='*/1'), sitepoint_snippets.s())
-    sender.add_periodic_task(crontab(minute='*/1'), sitepoint_content.s())
+    sender.add_periodic_task(crontab(minute='*/1'), load_sitepoint_snippets.s())
+    sender.add_periodic_task(crontab(minute='*/1'), load_sitepoint_content.s())

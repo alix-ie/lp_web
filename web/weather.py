@@ -13,7 +13,7 @@ def get_current_weather(json):
     return False
 
 
-def weather_by_city(city, days, lang):
+def get_weather_by_city(city, days, lang):
     weather_url = current_app.config['WEATHER_URL']
     params = {
         'key': current_app.config['WEATHER_API_KEY'],
@@ -39,5 +39,5 @@ def display_weather(weather_report):
 
 
 def get_weather(city, days=1, lang='en'):
-    weather_report = weather_by_city(city, days, lang)
+    weather_report = get_weather_by_city(city, days, lang)
     return display_weather(weather_report)
