@@ -11,22 +11,25 @@ from web.news.parsers.utils import get_html, save_news
 def get_news_snippets():
     html = get_html(config.SITEPOINT_URL + '/python/')
 
-    if html:
-        soup = BeautifulSoup(html, 'html.parser')
-        html_news = soup.findAll('section', class_='s15xj7te')[1].findAll('article')
+    if not html:
+        return
 
-        for news in html_news:
-            news_header = news.find('a', class_='t12xxw3g')
+    soup = BeautifulSoup(html, 'html.parser')
+    html_news = soup.findAll('section', class_='s15xj7te')[1].findAll('article')
 
-            title = news_header.text
-            url = config.SITEPOINT_URL + news_header['href']
-            published = news.find('time').text
+    for news in html_news:
+        news_header = news.find('a', class_='t12xxw3g')
 
-            try:
-                published = datetime.strptime(published, '%B %d, %Y')
-            except ValueError:
-                published = datetime.now()
+        title = news_header.text
+        url = config.SITEPOINT_URL + news_header['href']
+        published = news.find('time').text
 
+        try:
+            published = datetime.strptime(published, '%B %d, %Y')
+        except ValueError:
+            published = datetime.now()
+
+        if title and url and published:
             save_news(title, url, published)
 
 
@@ -36,14 +39,16 @@ def get_news_content():
     for news in news_without_text:
         html = get_html(news.url)
 
-        if html:
-            soup = BeautifulSoup(html, 'html.parser')
-            news_text = soup.find(
-                'section',
-                class_='Body-module--section--154bb space-y-6'
-            ).find('div').decode_contents()
+        if not html:
+            return
 
-            if news_text:
-                news.text = news_text
-                db.session.add(news)
-                db.session.commit()
+        soup = BeautifulSoup(html, 'html.parser')
+        news_text = soup.find(
+            'section',
+            class_='Body-module--section--154bb space-y-6'
+        ).find('div').decode_contents()
+
+        if news_text:
+            news.text = news_text
+            db.session.add(news)
+            db.session.commit()
