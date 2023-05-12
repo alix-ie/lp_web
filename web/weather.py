@@ -7,7 +7,7 @@ def get_current_weather(json):
     if 'data' in json and 'current_condition' in json['data']:
         try:
             return json['data']['current_condition'][0]
-        except(IndexError, TypeError):
+        except (IndexError, TypeError):
             return False
 
     return False
