@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user
 from web.db import db
 from web.user.forms import LoginForm, RegistrationForm
 from web.user.models import User
-from web.utils import get_redirect_target
+from web.utils import flash_form_errors, get_redirect_target
 
 blueprint = Blueprint('user', __name__, url_prefix='/users')
 
@@ -75,8 +75,6 @@ def process_registration():
         flash('Your registration was successful!')
         return redirect(get_redirect_target())
 
-    for field, errors in form.errors.items():
-        for error in errors:
-            flash(f'{getattr(form, field).label.text}: {error}')
+    flash_form_errors(form)
 
     return redirect(url_for('user.registration', next=get_redirect_target()))

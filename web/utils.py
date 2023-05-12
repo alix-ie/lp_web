@@ -1,6 +1,6 @@
 from urllib.parse import urljoin, urlparse
 
-from flask import request, url_for
+from flask import flash, request, url_for
 
 
 def is_safe_url(target):
@@ -20,3 +20,9 @@ def get_redirect_target():
 
         if is_safe_url(target):
             return target
+
+
+def flash_form_errors(form):
+    for field, errors in form.errors.items():
+        for error in errors:
+            flash(f'{getattr(form, field).label.text}: {error}')

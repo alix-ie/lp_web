@@ -4,7 +4,7 @@ from flask_login import current_user, login_required
 from web.db import db
 from web.news.forms import AddCommentForm
 from web.news.models import Comment, News
-from web.utils import get_redirect_target
+from web.utils import flash_form_errors, get_redirect_target
 from web.weather import weather_by_city
 
 blueprint = Blueprint('news', __name__)
@@ -56,8 +56,6 @@ def add_comment():
         flash('Comment was added successfully.')
 
     else:
-        for field, errors in form.errors.items():
-            for error in errors:
-                flash(f'{getattr(form, field).label.text}: {error}')
+        flash_form_errors(form)
 
     return redirect(get_redirect_target())
