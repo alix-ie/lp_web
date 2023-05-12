@@ -1,15 +1,12 @@
 import requests
 
+from web import config
 from web.db import db
 from web.news.models import News
 
 
 def get_html(url):
-
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) '
-                      'Chrome/87.0.4280.141 Mobile Safari/537.36'
-    }
+    headers = {'User-Agent': config.REQUESTS_USER_AGENT}
 
     try:
         response = requests.get(url, headers=headers)
@@ -22,6 +19,7 @@ def get_html(url):
 
 def save_news(title, url, published):
     news_exist = News.query.filter(News.url == url).count()
+
     if not news_exist:
         new_news = News(title=title, url=url, published=published)
         db.session.add(new_news)

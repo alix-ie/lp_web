@@ -9,4 +9,7 @@ blueprint = Blueprint('admin', __name__, url_prefix='/admin')
 @admin_required
 def admin_index():
     title = 'Control Panel'
-    return render_template('admin/index.html', page_title=title)
+    return render_template(
+        'admin/index.html',
+        page_title=title
+    )

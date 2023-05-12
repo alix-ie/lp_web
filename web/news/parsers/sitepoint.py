@@ -2,15 +2,14 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
+from web import config
 from web.db import db
 from web.news.models import News
 from web.news.parsers.utils import get_html, save_news
 
-HOST_URL = 'https://www.sitepoint.com'
-
 
 def get_news_snippets():
-    html = get_html(HOST_URL + '/python/')
+    html = get_html(config.SITEPOINT_URL + '/python/')
 
     if html:
         soup = BeautifulSoup(html, 'html.parser')
@@ -20,7 +19,7 @@ def get_news_snippets():
             news_header = news.find('a', class_='t12xxw3g')
 
             title = news_header.text
-            url = HOST_URL + news_header['href']
+            url = config.SITEPOINT_URL + news_header['href']
             published = news.find('time').text
 
             try:

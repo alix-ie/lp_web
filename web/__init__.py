@@ -3,11 +3,11 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 
 from web.db import db
-from web.weather import weather_by_city
 from web.admin.views import blueprint as admin_blueprint
 from web.news.views import blueprint as news_blueprint
-from web.user.views import blueprint as user_blueprint
 from web.user.models import User
+from web.user.views import blueprint as user_blueprint
+from web.weather import weather_by_city
 
 
 def create_app():

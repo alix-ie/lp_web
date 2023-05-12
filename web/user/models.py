@@ -1,6 +1,6 @@
 from flask_login import UserMixin
 from sqlalchemy.orm import relationship
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from web.db import db
 
@@ -25,4 +25,4 @@ class User(db.Model, UserMixin):
         return self.role == 'admin'
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return f'User {self.id}: {self.username}'

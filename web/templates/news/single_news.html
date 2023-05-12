@@ -20,7 +20,7 @@
                     {% endfor %}
             {% endif %}
             {% if current_user.is_authenticated %}
-                <form action="{{ url_for('news.add_comment') }}" method="POST">
+                <form action="{{ url_for('news.add_comment', next=request.full_path) }}" method="POST">
                     {{ add_comment_form.hidden_tag() }}
                     <div class="form-group">
                         {{ add_comment_form.comment_text.label }}

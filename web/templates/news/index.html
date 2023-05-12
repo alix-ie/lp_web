@@ -19,7 +19,7 @@
         <div class="col-4">
             <h2>Weather now</h2>
             {% if weather %}
-                The temperature is {{ weather.temp_C }} degrees centigrade. It feels like {{ weather.FeelsLikeC }}.
+                {{ weather.temp_C }}&#8451, feels like {{ weather.FeelsLikeC }}&#8451
             {% else %}
                 The weather report is not available now
             {% endif %}

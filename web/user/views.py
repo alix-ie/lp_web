@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, flash, redirect, url_for
-from flask_login import login_user, logout_user, current_user
+from flask import Blueprint, flash, redirect, render_template, url_for
+from flask_login import current_user, login_user, logout_user
 
 from web.db import db
 from web.user.forms import LoginForm, RegistrationForm
@@ -16,14 +16,21 @@ def login():
 
     title = 'Log in'
     login_form = LoginForm()
-    return render_template('user/login.html', page_title=title, form=login_form)
+
+    return render_template(
+        'user/login.html',
+        page_title=title,
+        form=login_form
+    )
 
 
 @blueprint.route('/process-login', methods=['POST'])
 def process_login():
     form = LoginForm()
+
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+
         if user and user.check_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
             flash('Logged in.')
@@ -47,12 +54,17 @@ def registration():
 
     title = 'Sign up'
     registration_form = RegistrationForm()
-    return render_template('user/registration.html', page_title=title, form=registration_form)
+    return render_template(
+        'user/registration.html',
+        page_title=title,
+        form=registration_form
+    )
 
 
 @blueprint.route('/process-registration', methods=['POST'])
 def process_registration():
     form = RegistrationForm()
+
     if form.validate_on_submit():
         new_user = User(username=form.username.data, role='user', email=form.email.data)
         new_user.set_password(form.password.data)

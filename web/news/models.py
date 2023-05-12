@@ -18,7 +18,7 @@ class News(db.Model):
         return len(self.comments)
 
     def __repr__(self):
-        return '<News {} {}>'.format(self.title, self.url)
+        return f'<News {self.url}: {self.title}>'
 
 
 class Comment(db.Model):

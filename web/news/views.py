@@ -14,8 +14,14 @@ blueprint = Blueprint('news', __name__)
 def index():
     title = 'News Python'
     weather_report = weather_by_city(current_app.config['WEATHER_DEFAULT_CITY'])
-    news = News.query.filter(News.text.isnot(None)).order_by(News.published.desc()).all()
-    return render_template('news/index.html', page_title=title, weather=weather_report, news_list=news)
+    news = News.query.filter(News.text.isnot(None)).order_by(News.published.desc()).limit(10).all()
+
+    return render_template(
+        'news/index.html',
+        page_title=title,
+        weather=weather_report,
+        news_list=news
+    )
 
 
 @blueprint.route('/news/<int:news_id>')
@@ -26,7 +32,12 @@ def single_news(news_id):
     if not news:
         abort(404)
 
-    return render_template('news/single_news.html', page_title=news.title, news=news, add_comment_form=add_comment_form)
+    return render_template(
+        'news/single_news.html',
+        page_title=news.title,
+        news=news,
+        add_comment_form=add_comment_form
+    )
 
 
 @blueprint.route('/news/add-comment', methods=['POST'])

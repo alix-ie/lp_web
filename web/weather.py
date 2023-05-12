@@ -1,4 +1,5 @@
 import requests
+
 from flask import current_app
 
 
@@ -21,6 +22,7 @@ def weather_by_city(city, days=1, lang='en'):
                     return current_weather['data']['current_condition'][0]
                 except(IndexError, TypeError):
                     return False
+
     except (requests.RequestException, ValueError):
         print('Network error')
         return False
